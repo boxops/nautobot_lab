@@ -1,0 +1,35 @@
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$9Twcc4lhC5y86gWc$ZBcxj95YVFMlKqOxEf/kfGHsDFZaSjRV7YSUcq09xx3ze6CpZkGgBsLUJizyN/M6IWU6b.eFA5Gw5WM/zZof//
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname {{ hostname }}
+!
+snmp-server community blogpost rw
+snmp-server vrf management
+!
+spanning-tree mode mstp
+!
+aaa authorization serial-console
+aaa authorization exec default local
+!
+vrf instance management
+   description "mgmt vrf"
+!
+management api http-commands
+   no shutdown
+   !
+   vrf management
+      no shutdown
+!
+ip routing
+ip routing vrf management
+!
+ip route vrf management 0.0.0.0/0 192.168.0.1
+!
+end
